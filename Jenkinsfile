@@ -8,17 +8,23 @@ pipeline {
     IMAGE_TAG = "gcr.io/${PROJECT}/${APP_NAME}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
     JENKINS_CRED = "${PROJECT}"
   }
-    
-  agent {
-    label 'docker' 
-  }
+  
+  agent any
   stages {
+    stage('git scm update') {
+      agent {
+        docker {
+          // Set both label and image
+          label 'docker'
+          image 'node:7-alpine'
+          args '--name docker-node' // list any args
+        }
+      }
       steps {
         git url: 'https://github.com/uk1996/echo-ip.git', branch: 'main'
       }
     }
     stage('docker build and push') {
-      
       steps {
         sh '''
         docker build -t cswook96/echo-ip .
