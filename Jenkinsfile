@@ -9,19 +9,10 @@ pipeline {
     JENKINS_CRED = "${PROJECT}"
   }
   
-  agent {
-    label 'docker-agent' 
-  }
+  agent any
   stages {
     stage('git scm update') {
-      agent {
-        docker {
-          // Set both label and image
-          label 'docker-agent'
-          image 'node:7-alpine'
-          args '--name docker-node' // list any args
-        }
-      }
+      
       steps {
         git url: 'https://github.com/uk1996/echo-ip.git', branch: 'main'
       }
