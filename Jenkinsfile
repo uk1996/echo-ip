@@ -10,14 +10,14 @@ pipeline {
   }
   
   agent {
-    label 'docker' 
+    label 'docker-agent' 
   }
   stages {
     stage('git scm update') {
       agent {
         docker {
           // Set both label and image
-          label 'docker'
+          label 'docker-agent'
           image 'node:7-alpine'
           args '--name docker-node' // list any args
         }
