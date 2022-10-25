@@ -9,7 +9,9 @@ pipeline {
     JENKINS_CRED = "${PROJECT}"
   }
   
-  agent any
+  agent {
+    label 'docker' 
+  }
   stages {
     stage('git scm update') {
       agent {
