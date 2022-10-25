@@ -9,7 +9,9 @@ pipeline {
     JENKINS_CRED = "${PROJECT}"
   }
     
-  agent any
+  agent {
+    label 'docker' 
+  }
   stages {
       steps {
         git url: 'https://github.com/uk1996/echo-ip.git', branch: 'main'
