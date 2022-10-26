@@ -35,6 +35,7 @@ pipeline {
             path: /usr/bin/kubectl
       '''
     }
+  }
     
   stages {
     stage('git scm update') {
