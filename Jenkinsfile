@@ -35,6 +35,8 @@ pipeline {
           volumeMounts:
           - mountPath: /var/run/docker.sock
             name: docker-sock
+          - mountPath: /usr/bin/gcloud
+            name: gcloud
           command:
           - cat
         serviceAccount: cd-jenkins
@@ -45,6 +47,9 @@ pipeline {
         - name: docker-sock
           hostPath:
             path: /var/run/docker.sock
+        - name: gcloud
+          hostPath:
+            path: /usr/bin/gcloud
       '''
     }
   }
