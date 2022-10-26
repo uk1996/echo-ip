@@ -9,7 +9,40 @@ pipeline {
     JENKINS_CRED = "${PROJECT}"
   }
   
-  agent any
+  agent {
+    kubernetes {
+      yaml '''
+      apiVersion: v1
+      kind: Pod
+      metadata:
+        labels:
+          app: blue-green-deploy
+        name: blue-green-deploy
+      spec:
+        containers:
+        - name: kustomize
+          image: sysnet4admin/kustomize:3.6.1
+          tty: true
+          volumeMounts:
+          - mountPath: /usr/bin/kubectl
+            name: kubectl
+          volumeMounts:
+          - mountPath: /bin/docker
+            name: docker
+          command:
+          - cat
+        serviceAccount: cd-jenkins
+        volumes:
+        - name: kubectl
+          hostPath:
+            path: /usr/bin/kubectl
+        volumes:
+        - name: docker
+          hostPath:
+            path: /bin/docker
+      '''
+    }
+    
   stages {
     stage('git scm update') {
       
