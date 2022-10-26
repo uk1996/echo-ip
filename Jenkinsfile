@@ -58,7 +58,6 @@ pipeline {
       steps {
         container('kustomize'){
               sh '''
-              cat /home/jenkins/agent/workspace/docker-test@tmp/durable-fa902db6/script.sh
               docker build -t cswook96/echo-ip .
               docker push cswook96/echo-ip
               '''
