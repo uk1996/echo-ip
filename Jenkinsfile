@@ -29,7 +29,7 @@ pipeline {
           - mountPath: /usr/bin/docker
             name: docker
           - mountPath: /var/run/docker.sock
-          name: docker-sock
+            name: docker-sock
           command:
           - cat
         serviceAccount: cd-jenkins
