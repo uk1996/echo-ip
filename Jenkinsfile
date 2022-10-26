@@ -7,7 +7,7 @@ pipeline {
     CLUSTER_ZONE = "asia-northeast3-a"
     IMAGE_TAG = "gcr.io/${PROJECT}/${APP_NAME}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
     JENKINS_CRED = "${PROJECT}"
-    DOCKERHUB_CREDENTIALS = credentials('docker-hub')
+//     DOCKERHUB_CREDENTIALS = credentials('docker-hub')
   }
   
   agent {
@@ -60,9 +60,9 @@ pipeline {
       steps {
          container('docker'){
               sh '''
-              echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+//               echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
               docker build -t cswook96/echo-ip .
-              docker push cswook96/echo-ip
+              docker push asia-northeast3-docker.pkg.dev/phonic-realm-360311/quickstart-docker-repo/quickstart-image:tag1
               '''
         }
       }
@@ -71,7 +71,7 @@ pipeline {
       steps {
         container('kustomize') {
           sh '''
-          kubectl create deployment pl-bulk-prod --image=sysnet4admin/echo-hname
+          kubectl create deployment pl-bulk-prod --image=asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:tag1
           kubectl expose deployment pl-bulk-prod --type=LoadBalancer --port=8080 \
                                                  --target-port=80 --name=pl-bulk-prod-svc
           '''
