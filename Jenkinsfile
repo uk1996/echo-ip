@@ -26,6 +26,12 @@ pipeline {
           volumeMounts:
           - mountPath: /usr/bin/kubectl
             name: kubectl
+          command:
+          - cat
+        - name: docker
+          image: docker:dind
+          tty: true
+          volumeMounts:
           - mountPath: /var/run/docker.sock
             name: docker-sock
           command:
@@ -53,7 +59,7 @@ pipeline {
     
     stage('docker build and push') {
       steps {
-         container('kustomize'){
+         container('docker'){
               sh '''
               docker build -t cswook96/echo-ip .
               docker push cswook96/echo-ip
@@ -61,16 +67,16 @@ pipeline {
         }
       }
     }
-//     stage('deploy kubernetes') {
-//       steps {
-//         container('kustomize') {
-//           sh '''
-//           kubectl create deployment pl-bulk-prod --image=sysnet4admin/echo-hname
-//           kubectl expose deployment pl-bulk-prod --type=LoadBalancer --port=8080 \
-//                                                  --target-port=80 --name=pl-bulk-prod-svc
-//           '''
-//         }
-//       }
-//     }
+    stage('deploy kubernetes') {
+      steps {
+        container('kustomize') {
+          sh '''
+          kubectl create deployment pl-bulk-prod --image=sysnet4admin/echo-hname
+          kubectl expose deployment pl-bulk-prod --type=LoadBalancer --port=8080 \
+                                                 --target-port=80 --name=pl-bulk-prod-svc
+          '''
+        }
+      }
+    }
   }
 }
