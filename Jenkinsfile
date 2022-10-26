@@ -62,7 +62,7 @@ pipeline {
     }
     stage('docker build and push') {
       steps {
-         container('docker'){
+         container('gcloud'){
               sh '''
               gcloud auth configure-docker asia-northeast3-docker.pkg.dev
               docker build -t asia-northeast3-docker.pkg.dev/phonic-realm-360311/quickstart-docker-repo/quickstart-image:tag1 .
