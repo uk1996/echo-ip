@@ -56,15 +56,11 @@ pipeline {
         git url: 'https://github.com/uk1996/echo-ip.git', branch: 'main'
       }
     }
-    stage('Login'){
-      steps{
-          sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin' // docker hub 로그인
-      }
-    }
     stage('docker build and push') {
       steps {
          container('docker'){
               sh '''
+              echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
               docker build -t cswook96/echo-ip .
               docker push cswook96/echo-ip
               '''
