@@ -60,6 +60,15 @@ pipeline {
         git url: 'https://github.com/uk1996/echo-ip.git', branch: 'main'
       }
     }
+    stage('set auth') {
+      steps {
+         container('gcloud'){
+              sh '''
+              gcloud auth configure-docker asia-northeast3-docker.pkg.dev
+              '''
+        }
+      }
+    }
     stage('docker build and push') {
       steps {
          container('docker'){
