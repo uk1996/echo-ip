@@ -39,6 +39,9 @@ pipeline {
         - name: gcloud
           image: gcr.io/cloud-builders/gcloud
           tty: true
+          volumeMounts:
+          - mountPath: /var/run/docker.sock
+            name: docker-sock
           command:
           - cat
         serviceAccount: cd-jenkins
