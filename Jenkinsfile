@@ -47,7 +47,7 @@ pipeline {
     }
   }
     
-//   stages {
+  stages {
 //     stage('git scm update') {
       
 //       steps {
