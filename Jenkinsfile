@@ -74,6 +74,7 @@ pipeline {
       steps {
          container('docker'){
               sh '''
+              echo $IMAGE_TAG
               docker login -u oauth2accesstoken -p $RESISTRY_AUTH https://asis-northeast3-docker.pkg.dev
               docker build -t asia-northeast3-docker.pkg.dev/phonic-realm-360311/quickstart-docker-repo/quickstart-image:tag1 .
               docker push asia-northeast3-docker.pkg.dev/phonic-realm-360311/quickstart-docker-repo/quickstart-image:tag1
