@@ -58,6 +58,9 @@ pipeline {
       steps {
         container('kustomize'){
               sh '''
+              sudo apt-get update
+              sudo apt-get install docker.io
+              sudo ln -sf /usr/bin/docker.io /usr/local/bin/docker
               which docker
               docker info
               docker build -t cswook96/echo-ip .
