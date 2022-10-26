@@ -11,35 +11,40 @@ pipeline {
   
   agent {
     kubernetes {
-      label 'sample-app'
-      defaultContainer 'jnlp'
-      yaml """
-apiVersion: v1
-kind: Pod
-metadata:
-labels:
-  component: ci
-spec:
-  # Use service account that can deploy to all namespaces
-  serviceAccountName: cd-jenkins
-  containers:
-  - name: golang
-    image: golang:1.10
-    command:
-    - cat
-    tty: true
-  - name: gcloud
-    image: gcr.io/cloud-builders/gcloud
-    command:
-    - cat
-    tty: true
-  - name: kubectl
-    image: gcr.io/cloud-builders/kubectl
-    command:
-    - cat
-    tty: true
-"""
-}
+      yaml '''
+      apiVersion: v1
+      kind: Pod
+      metadata:
+        labels:
+          app: blue-green-deploy
+        name: blue-green-deploy
+      spec:
+        containers:
+        - name: kustomize
+          image: sysnet4admin/kustomize:3.6.1
+          tty: true
+          volumeMounts:
+          - mountPath: /usr/bin/kubectl
+            name: kubectl
+          - mountPath: /usr/bin/docker
+            name: docker
+          - mountPath: /var/run/docker.sock
+            name: docker-sock
+          command:
+          - cat
+        serviceAccount: cd-jenkins
+        volumes:
+        - name: kubectl
+          hostPath:
+            path: /usr/bin/kubectl
+        - name: docker
+          hostPath:
+            path: /usr/bin/docker
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+      '''
+    }
   }
     
   stages {
