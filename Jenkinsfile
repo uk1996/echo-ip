@@ -21,15 +21,11 @@ pipeline {
       spec:
         containers:
         - name: kustomize
-          image: sysnet4admin/kustomize:3.6.1
+          image: docker:dind
           tty: true
           volumeMounts:
           - mountPath: /usr/bin/kubectl
             name: kubectl
-          - mountPath: /usr/bin/docker
-            name: docker
-          - mountPath: /var/run/docker.sock
-            name: docker-sock
           command:
           - cat
         serviceAccount: cd-jenkins
@@ -37,12 +33,6 @@ pipeline {
         - name: kubectl
           hostPath:
             path: /usr/bin/kubectl
-        - name: docker
-          hostPath:
-            path: /usr/bin/docker
-        - name: docker-sock
-          hostPath:
-            path: /var/run/docker.sock
       '''
     }
   }
@@ -58,8 +48,11 @@ pipeline {
     
     stage('docker build and push') {
       steps {
-        container('gcloud'){
-              sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ."
+         container('kustomize'){
+              sh '''
+              docker build -t cswook96/echo-ip .
+              docker push cswook96/echo-ip
+              '''
         }
       }
     }
