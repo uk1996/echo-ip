@@ -54,6 +54,12 @@ pipeline {
         git url: 'https://github.com/uk1996/echo-ip.git', branch: 'main'
       }
     }
+    
+    stage('Initialize'){
+        def dockerHome = tool 'docker'
+        env.PATH = "${dockerHome}/bin:${env.PATH}"
+    }
+    
     stage('docker build and push') {
       steps {
         container('kustomize'){
