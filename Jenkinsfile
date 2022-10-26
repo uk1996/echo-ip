@@ -55,12 +55,6 @@ pipeline {
       }
     }
     
-    stage('Initialize'){
-      container('kustomize') {
-        def dockerHome = tool 'docker'
-        env.PATH = "${dockerHome}/bin:${env.PATH}"
-      }
-    }
     
     stage('docker build and push') {
       steps {
