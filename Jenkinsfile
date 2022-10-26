@@ -24,15 +24,25 @@ pipeline {
           image: sysnet4admin/kustomize:3.6.1
           tty: true
           volumeMounts:
+          - mountPath: /usr/bin/kubectl
+            name: kubectl
           - mountPath: /usr/bin/docker
             name: docker
+          - mountPath: /var/run/docker.sock
+          name: docker-sock
           command:
           - cat
         serviceAccount: cd-jenkins
         volumes:
+        - name: kubectl
+          hostPath:
+            path: /usr/bin/kubectl
         - name: docker
           hostPath:
             path: /usr/bin/docker
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.scok
       '''
     }
   }
