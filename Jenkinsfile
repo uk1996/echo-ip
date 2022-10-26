@@ -36,10 +36,6 @@ pipeline {
             name: docker-sock
           command:
           - cat
-        - name: gcloud
-          image: gcr.io/cloud-builders/gcloud
-          command:
-          - cat
         serviceAccount: cd-jenkins
         volumes:
         - name: kubectl
