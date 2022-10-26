@@ -42,6 +42,8 @@ pipeline {
           volumeMounts:
           - mountPath: /var/run/docker.sock
             name: docker-sock
+          - mountPath: /usr/bin/docker
+            name: docker
           command:
           - cat
         serviceAccount: cd-jenkins
@@ -52,6 +54,9 @@ pipeline {
         - name: docker-sock
           hostPath:
             path: /var/run/docker.sock
+        - name: docker
+          hostPath:
+            path: /usr/bin/docker
       '''
     }
   }
