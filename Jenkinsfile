@@ -26,6 +26,8 @@ pipeline {
           volumeMounts:
           - mountPath: /usr/bin/kubectl
             name: kubectl
+          - mountPath: /bin/docker
+            name: docker
           command:
           - cat
         serviceAccount: cd-jenkins
@@ -33,6 +35,9 @@ pipeline {
         - name: kubectl
           hostPath:
             path: /usr/bin/kubectl
+        - name: docker
+          hostPath:
+            path: /bin/docker
       '''
     }
   }
