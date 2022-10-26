@@ -42,7 +42,7 @@ pipeline {
             path: /usr/bin/docker
         - name: docker-sock
           hostPath:
-            path: /var/run/docker.scok
+            path: /var/run/docker.sock
       '''
     }
   }
