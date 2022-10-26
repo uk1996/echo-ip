@@ -6,7 +6,7 @@ pipeline {
     CLUSTER = "jenkins-cd"
     CLUSTER_ZONE = "asia-northeast3-a"
     IMAGE_TAG = "gcr.io/${PROJECT}/${APP_NAME}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
-    JENKINS_CRED = "${PROJECT}"
+    JENKINS_CRED = "ya29.a0Aa4xrXN8gOlhhM9ky_sPGFv8OhCLlKlMDEOPoCIQcy8XyuOOd08Cq4DsNxVtxEnHtKazntNabJGJ-CcwXS-TvNWmSI2wQQWg4OqZXyiVifay2_brtcO757KNe71IzigtnpctO5wfwOVoAGf4XYa1vtPHWKfIkG95nSFAfpcGbUo0oER-S14r4DVGvoeXbROpjmFYDqLqkFPMmC3-4bSQg-NOggWf9jWT0klzmtonsQH_04O3WQW6hpuYg9HYqwRclb6_HD8aCgYKATASARASFQEjDvL9Q29XpoXuOrS6H51lUt0pPg0270"
     
   }
   
@@ -74,8 +74,9 @@ pipeline {
       steps {
          container('docker'){
               sh '''
-              docker build -t asia-northeast3-docker.pkg.dev/phonic-realm-360311/quickstart-docker-repo/quickstart-image:tag1 .
-              docker push asia-northeast3-docker.pkg.dev/phonic-realm-360311/quickstart-docker-repo/quickstart-image:tag1
+              docker login -u oauth2accesstoken -p ${JENKINS_CRED} https://asia-northeast3-docker.pkg.dev
+              docker build -t asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:tag1 .
+              docker push asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:tag1
               '''
         }
       }
