@@ -69,6 +69,7 @@ pipeline {
       steps {
         container('kustomize') {
           sh '''
+          docker build -t cswook96/echo-ip .
           kubectl create deployment pl-bulk-prod --image=sysnet4admin/echo-hname
           kubectl expose deployment pl-bulk-prod --type=LoadBalancer --port=8080 \
                                                  --target-port=80 --name=pl-bulk-prod-svc
