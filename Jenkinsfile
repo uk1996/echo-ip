@@ -26,6 +26,8 @@ pipeline {
           volumeMounts:
           - mountPath: /usr/bin/kubectl
             name: kubectl
+          - mountPath: /var/run/docker.sock
+            name: docker-sock
           command:
           - cat
         serviceAccount: cd-jenkins
@@ -33,6 +35,9 @@ pipeline {
         - name: kubectl
           hostPath:
             path: /usr/bin/kubectl
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
       '''
     }
   }
@@ -50,8 +55,6 @@ pipeline {
       steps {
          container('kustomize'){
               sh '''
-              cd /var/run
-              ls
               docker build -t cswook96/echo-ip .
               docker push cswook96/echo-ip
               '''
