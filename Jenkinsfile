@@ -6,7 +6,8 @@ pipeline {
     CLUSTER = "jenkins-cd"
     CLUSTER_ZONE = "asia-northeast3-a"
     IMAGE_TAG = "gcr.io/${PROJECT}/${APP_NAME}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
-    JENKINS_CRED = "${PROJECT}"
+    JENKINS_CRED = "${gcloud auth print-access-token}"
+    
   }
   
   agent {
@@ -60,19 +61,11 @@ pipeline {
         git url: 'https://github.com/uk1996/echo-ip.git', branch: 'main'
       }
     }
-    stage('set auth') {
-      steps {
-         container('gcloud'){
-              sh '''
-              docker login -u oauth2accesstoken -p "$(gcloud auth print-access-token)" https://asis-northeast3-docker.pkg.dev
-              '''
-        }
-      }
-    }
     stage('docker build and push') {
       steps {
          container('docker'){
               sh '''
+              docker login -u oauth2accesstoken -p "$(JENKINS_CRED)" https://asis-northeast3-docker.pkg.dev
               docker build -t asia-northeast3-docker.pkg.dev/phonic-realm-360311/quickstart-docker-repo/quickstart-image:tag1 .
               docker push asia-northeast3-docker.pkg.dev/phonic-realm-360311/quickstart-docker-repo/quickstart-image:tag1
               '''
