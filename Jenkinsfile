@@ -6,7 +6,7 @@ pipeline {
     CLUSTER = "jenkins-cd"
     CLUSTER_ZONE = "asia-northeast3-a"
     IMAGE_TAG = "gcr.io/${PROJECT}/${APP_NAME}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
-    JENKINS_CRED = "${gcloud auth print-access-token}"
+    JENKINS_CRED = "${PROJECT}"
     
   }
   
