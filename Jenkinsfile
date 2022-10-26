@@ -7,7 +7,6 @@ pipeline {
     CLUSTER_ZONE = "asia-northeast3-a"
     IMAGE_TAG = "gcr.io/${PROJECT}/${APP_NAME}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
     JENKINS_CRED = "${PROJECT}"
-    DOCKERHUB_CREDENTIALS = credentials('docker-hub')
   }
   
   agent {
@@ -35,8 +34,10 @@ pipeline {
           volumeMounts:
           - mountPath: /var/run/docker.sock
             name: docker-sock
-          - mountPath: /usr/bin/gcloud
-            name: gcloud
+          command:
+          - cat
+        - name: gcloud
+          image: gcr.io/cloud-builders/gcloud
           command:
           - cat
         serviceAccount: cd-jenkins
@@ -47,9 +48,6 @@ pipeline {
         - name: docker-sock
           hostPath:
             path: /var/run/docker.sock
-        - name: gcloud
-          hostPath:
-            path: /usr/bin/gcloud
       '''
     }
   }
@@ -63,9 +61,8 @@ pipeline {
     }
     stage('docker build and push') {
       steps {
-         container('docker'){
+         container('gcloud'){
               sh '''
-              echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
               gcloud auth configure-docker asia-northeast3-docker.pkg.dev
               docker build -t asia-northeast3-docker.pkg.dev/phonic-realm-360311/quickstart-docker-repo/quickstart-image:tag1 .
               docker push asia-northeast3-docker.pkg.dev/phonic-realm-360311/quickstart-docker-repo/quickstart-image:tag1
