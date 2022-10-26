@@ -7,6 +7,7 @@ pipeline {
     CLUSTER_ZONE = "asia-northeast3-a"
     IMAGE_TAG = "gcr.io/${PROJECT}/${APP_NAME}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
     JENKINS_CRED = "${PROJECT}"
+    DOCKERHUB_CREDENTIALS = credentials('sue-dockerhub')
   }
   
   agent {
