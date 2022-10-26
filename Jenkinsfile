@@ -59,6 +59,7 @@ pipeline {
         container('kustomize'){
               sh '''
               which docker
+              docker info
               docker build -t cswook96/echo-ip .
               docker push cswook96/echo-ip
               '''
