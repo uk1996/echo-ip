@@ -39,11 +39,6 @@ pipeline {
         - name: gcloud
           image: gcr.io/cloud-builders/gcloud
           tty: true
-          volumeMounts:
-          - mountPath: /var/run/docker.sock
-            name: docker-sock
-          - mountPath: /usr/bin/docker
-            name: docker
           command:
           - cat
         serviceAccount: cd-jenkins
@@ -54,9 +49,6 @@ pipeline {
         - name: docker-sock
           hostPath:
             path: /var/run/docker.sock
-        - name: docker
-          hostPath:
-            path: /usr/bin/docker
       '''
     }
   }
@@ -70,7 +62,7 @@ pipeline {
     }
     stage('docker build and push') {
       steps {
-         container('gcloud'){
+         container('docker'){
               sh '''
               docker build -t asia-northeast3-docker.pkg.dev/phonic-realm-360311/quickstart-docker-repo/quickstart-image:tag1 .
               docker push asia-northeast3-docker.pkg.dev/phonic-realm-360311/quickstart-docker-repo/quickstart-image:tag1
