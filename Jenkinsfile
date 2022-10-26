@@ -48,28 +48,27 @@ pipeline {
   }
     
   stages {
-//     stage('git scm update') {
+    stage('git scm update') {
       
-//       steps {
-//         git url: 'https://github.com/uk1996/echo-ip.git', branch: 'main'
-//       }
-//     }
-//     stage('docker build and push') {
-//       steps {
-//         container('kustomize'){
-//               sh '''
-//               cd /usr/bin/
-//               docker build -t cswook96/echo-ip .
-//               docker push cswook96/echo-ip
-//               '''
-//         }
-//       }
-//     }
+      steps {
+        git url: 'https://github.com/uk1996/echo-ip.git', branch: 'main'
+      }
+    }
+    stage('docker build and push') {
+      steps {
+        container('kustomize'){
+              sh '''
+
+              docker build -t cswook96/echo-ip .
+              docker push cswook96/echo-ip
+              '''
+        }
+      }
+    }
     stage('deploy kubernetes') {
       steps {
         container('kustomize') {
           sh '''
-          docker build -t cswook96/echo-ip .
           kubectl create deployment pl-bulk-prod --image=sysnet4admin/echo-hname
           kubectl expose deployment pl-bulk-prod --type=LoadBalancer --port=8080 \
                                                  --target-port=80 --name=pl-bulk-prod-svc
