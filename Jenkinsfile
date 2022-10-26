@@ -26,7 +26,7 @@ pipeline {
           volumeMounts:
           - mountPath: /usr/bin/kubectl
             name: kubectl
-          - mountPath: /bin/docker
+          - mountPath: /usr/bin/docker
             name: docker
           command:
           - cat
@@ -37,7 +37,7 @@ pipeline {
             path: /usr/bin/kubectl
         - name: docker
           hostPath:
-            path: /bin/docker
+            path: /usr/bin/docker
       '''
     }
   }
