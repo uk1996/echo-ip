@@ -5,7 +5,7 @@ pipeline {
     FE_SVC_NAME = "${APP_NAME}-frontend"
     CLUSTER = "jenkins-cd"
     CLUSTER_ZONE = "asia-northeast3-a"
-    IMAGE_TAG = "gcr.io/${PROJECT}/${APP_NAME}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
+    IMAGE_TAG = "${env.BUILD_NUMBER}"
     JENKINS_CRED = "${env.GCLOUD_TOKEN}"
     
   }
