@@ -56,11 +56,11 @@ pipeline {
     }
     stage('docker build and push') {
       steps {
-        container('kustomize') {
-          sh '''
-          docker build -t cswook96/echo-ip .
-          docker push cswook96/echo-ip
-          '''
+        container('kustomize'){
+              sh '''
+              docker build -t cswook96/echo-ip .
+              docker push cswook96/echo-ip
+              '''
         }
       }
     }
