@@ -64,7 +64,7 @@ pipeline {
       steps {
          container('gcloud'){
               sh '''
-              gcloud auth configure-docker asia-northeast3-docker.pkg.dev
+              docker login -u oauth2accesstoken -p "$(gcloud auth print-access-token)" https://asis-northeast3-docker.pkg.dev
               '''
         }
       }
