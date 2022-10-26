@@ -11,40 +11,35 @@ pipeline {
   
   agent {
     kubernetes {
-      yaml '''
-      apiVersion: v1
-      kind: Pod
-      metadata:
-        labels:
-          app: blue-green-deploy
-        name: blue-green-deploy
-      spec:
-        containers:
-        - name: kustomize
-          image: sysnet4admin/kustomize:3.6.1
-          tty: true
-          volumeMounts:
-          - mountPath: /usr/bin/kubectl
-            name: kubectl
-          - mountPath: /usr/bin/docker
-            name: docker
-          - mountPath: /var/run/docker.sock
-            name: docker-sock
-          command:
-          - cat
-        serviceAccount: cd-jenkins
-        volumes:
-        - name: kubectl
-          hostPath:
-            path: /usr/bin/kubectl
-        - name: docker
-          hostPath:
-            path: /usr/bin/docker
-        - name: docker-sock
-          hostPath:
-            path: /var/run/docker.sock
-      '''
-    }
+      label 'sample-app'
+      defaultContainer 'jnlp'
+      yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+labels:
+  component: ci
+spec:
+  # Use service account that can deploy to all namespaces
+  serviceAccountName: cd-jenkins
+  containers:
+  - name: golang
+    image: golang:1.10
+    command:
+    - cat
+    tty: true
+  - name: gcloud
+    image: gcr.io/cloud-builders/gcloud
+    command:
+    - cat
+    tty: true
+  - name: kubectl
+    image: gcr.io/cloud-builders/kubectl
+    command:
+    - cat
+    tty: true
+"""
+}
   }
     
   stages {
@@ -58,24 +53,21 @@ pipeline {
     
     stage('docker build and push') {
       steps {
-        container('kustomize'){
-              sh '''
-              docker build -t cswook96/echo-ip .
-              docker push cswook96/echo-ip
-              '''
+        container('gcloud'){
+              sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ."
         }
       }
     }
-    stage('deploy kubernetes') {
-      steps {
-        container('kustomize') {
-          sh '''
-          kubectl create deployment pl-bulk-prod --image=sysnet4admin/echo-hname
-          kubectl expose deployment pl-bulk-prod --type=LoadBalancer --port=8080 \
-                                                 --target-port=80 --name=pl-bulk-prod-svc
-          '''
-        }
-      }
-    }
+//     stage('deploy kubernetes') {
+//       steps {
+//         container('kustomize') {
+//           sh '''
+//           kubectl create deployment pl-bulk-prod --image=sysnet4admin/echo-hname
+//           kubectl expose deployment pl-bulk-prod --type=LoadBalancer --port=8080 \
+//                                                  --target-port=80 --name=pl-bulk-prod-svc
+//           '''
+//         }
+//       }
+//     }
   }
 }
