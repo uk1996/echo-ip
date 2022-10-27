@@ -6,6 +6,7 @@ pipeline {
     CLUSTER = "jenkins-cd"
     CLUSTER_ZONE = "asia-northeast3-a"
     IMAGE_TAG = "${env.BUILD_NUMBER}"
+    BRANCH_NAME = "${env.BRANCH_NAME}"
   }
   
   agent {
@@ -73,8 +74,8 @@ pipeline {
          container('docker'){
               sh '''
               docker login -u oauth2accesstoken -p ${GCLOUD_AUTH} https://asia-northeast3-docker.pkg.dev
-              docker build -t asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${IMAGE_TAG} .
-              docker push asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${IMAGE_TAG}
+              docker build -t asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${IMAGE_TAG}_${BRANCH_NAME} .
+              docker push asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${IMAGE_TAG}_${BRANCH_NAME}
               '''
         }
       }
@@ -84,7 +85,8 @@ pipeline {
         container('kustomize') {
           sh '''
           kustomize create --resources ./deployment.yaml
-          kustomize edit set image asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${IMAGE_TAG}
+          kustomize edit set namesuffix -- -${BRANCH_NAME}
+          kustomize edit set image asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${IMAGE_TAG}_${BRANCH_NAME}
           kustomize build . | kubectl apply -f deployment.yaml --record
           '''
         }
