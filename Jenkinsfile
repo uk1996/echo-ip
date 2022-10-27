@@ -37,6 +37,10 @@ pipeline {
             name: docker-sock
           command:
           - cat
+        - name: gcloud
+          image: gcr.io/cloud-builders/gcloud
+          command:
+          - cat
         serviceAccount: cd-jenkins
         volumes:
         - name: kubectl
@@ -58,12 +62,14 @@ pipeline {
     }
     stage('docker build and push') {
       steps {
-         container('docker'){
-              sh '''
-              docker login -u oauth2accesstoken -p ${JENKINS_CRED} https://asia-northeast3-docker.pkg.dev
-              docker build -t asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${IMAGE_TAG} .
-              docker push asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${IMAGE_TAG}
-              '''
+        container('gcloud'){
+           container('docker'){
+                sh '''
+                docker login -u oauth2accesstoken -p ${JENKINS_CRED} https://asia-northeast3-docker.pkg.dev
+                docker build -t asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${IMAGE_TAG} .
+                docker push asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${IMAGE_TAG}
+                '''
+          }
         }
       }
     }
