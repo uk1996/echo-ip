@@ -64,7 +64,7 @@ pipeline {
         container('gcloud') {
           sh '''
           gcloud container clusters get-credentials jenkins-cd --zone asia-northeast3-a --project phonic-realm-360311
-          gcloud auth print-access-token
+          export GCLOUD_AUTH=$(gcloud auth print-access-token)
           '''
         }
       }
@@ -73,6 +73,7 @@ pipeline {
       steps {
          container('docker'){
               sh '''
+              echo $GCLOUD_AUTH
               docker build -t asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${IMAGE_TAG} .
               docker push asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${IMAGE_TAG}
               '''
