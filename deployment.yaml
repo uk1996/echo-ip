@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: echo-ip
+  name: echo-ip
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: echo-ip
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: echo-ip
+    spec:
+      containers:
+      - image: asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:99
+        name: quickstart-image
+        resources: {}
+status: {}
