@@ -77,6 +77,8 @@ pipeline {
       steps {
         container('kustomize') {
           sh '''
+          kubectl delete deployment pl-bulk-prod
+          kubectl delete service pl-bulk-prod-svc
           kubectl create deployment pl-bulk-prod --image=asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${IMAGE_TAG}
           kubectl expose deployment pl-bulk-prod --type=LoadBalancer --port=8080 \
                                                  --target-port=80 --name=pl-bulk-prod-svc
