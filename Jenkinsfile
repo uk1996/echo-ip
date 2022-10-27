@@ -87,7 +87,7 @@ pipeline {
           kustomize create --resources ./deployment.yaml
           kustomize edit set namesuffix -- -${BRANCH_NAME}
           kustomize edit set image asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${IMAGE_TAG}_${BRANCH_NAME}
-          kustomize build . | kubectl apply -f deployment.yaml --record
+          kustomize build . | kubectl apply -f - --record
           '''
         }
       }
