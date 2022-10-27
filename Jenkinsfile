@@ -60,6 +60,15 @@ pipeline {
         git url: 'https://github.com/uk1996/echo-ip.git', branch: 'main'
       }
     }
+    stage('set auth') {
+      steps {
+        container('gcloud') {
+          sh '''
+          gcloud auth print-access-token
+          '''
+        }
+      }
+    }
     stage('docker build and push') {
       steps {
         container('gcloud'){
