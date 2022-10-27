@@ -37,6 +37,7 @@ pipeline {
           - cat
         - name: gcloud
           image: gcr.io/cloud-builders/gcloud
+          tty: true
           command:
           - cat
         serviceAccount: cd-jenkins
@@ -58,15 +59,15 @@ pipeline {
         git url: 'https://github.com/uk1996/echo-ip.git', branch: 'main'
       }
     }
-//     stage('set auth') {
-//       steps {
-//         container('gcloud') {
-//           sh '''
-//           gcloud auth print-access-token
-//           '''
-//         }
-//       }
-//     }
+    stage('set auth') {
+      steps {
+        container('gcloud') {
+          sh '''
+          gcloud auth print-access-token
+          '''
+        }
+      }
+    }
     stage('docker build and push') {
       steps {
          container('docker'){
