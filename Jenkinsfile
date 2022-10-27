@@ -73,6 +73,7 @@ pipeline {
          container('docker'){
               sh '''
               echo $GCLOUD_AUTH
+              docker login -u oauth2accesstoken -p ${GCLOUD_AUTH} https://asia-northeast3-docker.pkg.dev
               docker build -t asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${IMAGE_TAG} .
               docker push asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${IMAGE_TAG}
               '''
