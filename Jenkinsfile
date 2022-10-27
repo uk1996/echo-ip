@@ -62,10 +62,9 @@ pipeline {
     stage('set auth') {
       steps {
         container('gcloud') {
-          sh '''
-          gcloud container clusters get-credentials jenkins-cd --zone asia-northeast3-a --project phonic-realm-360311
-          export GCLOUD_AUTH=$(gcloud auth print-access-token)
-          '''
+          script {
+            env.GCLOUD_AUTH=sh(returnStdout: true, script: 'gcloud auth print-access-token').trim()
+          }
         }
       }
     }
