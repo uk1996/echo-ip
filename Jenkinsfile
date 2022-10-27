@@ -74,8 +74,8 @@ pipeline {
          container('docker'){
               sh '''
               docker login -u oauth2accesstoken -p ${GCLOUD_AUTH} https://asia-northeast3-docker.pkg.dev
-              docker build -t asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${IMAGE_TAG}_${BRANCH_NAME} .
-              docker push asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${IMAGE_TAG}_${BRANCH_NAME}
+              docker build -t asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${BRANCH_NAME}_${IMAGE_TAG} .
+              docker push asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${BRANCH_NAME}_${IMAGE_TAG}
               '''
         }
       }
@@ -86,7 +86,7 @@ pipeline {
           sh '''
           kustomize create --resources ./deployment.yaml
           kustomize edit set namesuffix -- -${BRANCH_NAME}
-          kustomize edit set image asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${IMAGE_TAG}_${BRANCH_NAME}
+          kustomize edit set image asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${BRANCH_NAME}_${IMAGE_TAG}
           kustomize build . | kubectl apply -f - --record
           '''
         }
