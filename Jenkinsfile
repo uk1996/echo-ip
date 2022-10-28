@@ -1,8 +1,6 @@
 pipeline {
   environment {
     PROJECT = "phonic-realm-360311"
-    CLUSTER = "tilda-saas-dev"
-    CLUSTER_ZONE = "asia-northeast3"
     BUILD_NUM = "${env.BUILD_NUMBER}"
     BRANCH_NAME = "${env.BRANCH_NAME}"
     IMAGE_NAME = "asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${BRANCH_NAME}_${BUILD_NUM}"
@@ -50,9 +48,24 @@ pipeline {
     
   stages {
     stage('git scm update') {
-      
       steps {
         git url: 'https://github.com/uk1996/echo-ip.git', branch: 'main'
+      }
+    }
+    stage('define cluster'){
+      steps {
+        script {
+          if(env.BRANCH_NAME == "dev"){
+            env.CLUSTER = "tilda-saas-dev"
+            env.CLUSTER_ZONE = "asia-northeast3"
+          } else if(env.BRANCH_NAME == "prod"){
+            env.CLUSTER = "tilda-saas-prod"
+            env.CLUSTER_ZONE = "asia-northeast3"
+          } else {
+            env.CLUSTER = "jenkins-cd"
+            env.CLUSTER_ZONE = "asia-northeast3-a"
+          }
+        }
       }
     }
     stage('set auth') {
