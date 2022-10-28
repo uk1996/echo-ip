@@ -23,7 +23,7 @@ spec:
         app: echo-ip
     spec:
       containers:
-      - image: asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:99
+      - image: set_image
         name: quickstart-image
         resources: {}
 status: {}
