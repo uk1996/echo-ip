@@ -84,6 +84,7 @@ pipeline {
       steps {
         container('kustomize') {
           sh '''
+          kubectl config use-context tilda-saas-dev
           kustomize create --resources ./deployment.yaml
           kustomize edit set namesuffix -- -${BRANCH_NAME}
           kustomize edit set image asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:${BRANCH_NAME}_${IMAGE_TAG}
