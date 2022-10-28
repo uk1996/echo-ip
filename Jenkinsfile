@@ -88,6 +88,7 @@ pipeline {
         container('kustomize') {
           sh "sed -i.bak 's#set_image#${IMAGE_NAME}#' ./deployment.yaml"
           step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: './deployment.yaml', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
+          step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: './service.yaml', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
         }
       }
     }
