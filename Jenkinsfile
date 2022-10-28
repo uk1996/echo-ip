@@ -87,6 +87,7 @@ pipeline {
         container('kustomize') {
           sh "sed -i.bak 's#asia-northeast3-docker.pkg.dev/phonic-realm-360311/test-img-registry/quickstart-image:#${BRANCH_NAME}_${IMAGE_TAG}#' ./deployment.yaml"
           step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: './deployment.yaml', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
+        }
       }
     }
   }
