@@ -26,8 +26,6 @@ pipeline {
           volumeMounts:
           - mountPath: /usr/bin/kubectl
             name: kubectl
-          - mountPath: ~/.kube/config
-            name: kube-config
           command:
           - cat
         - name: docker
@@ -51,9 +49,6 @@ pipeline {
         - name: docker-sock
           hostPath:
             path: /var/run/docker.sock
-        - name: kube-config
-          hostPath:
-            path: ~/.kube/config
       '''
     }
   }
