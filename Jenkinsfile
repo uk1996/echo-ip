@@ -1,8 +1,6 @@
 pipeline {
   environment {
     PROJECT = "phonic-realm-360311"
-    APP_NAME = "gceme"
-    FE_SVC_NAME = "${APP_NAME}-frontend"
     CLUSTER = "tilda-saas-dev"
     CLUSTER_ZONE = "asia-northeast3"
     BUILD_NUM = "${env.BUILD_NUMBER}"
@@ -18,16 +16,13 @@ pipeline {
       kind: Pod
       metadata:
         labels:
-          app: blue-green-deploy
-        name: blue-green-deploy
+          app: jenkins-agent
+        name: jenkins-agent
       spec:
         containers:
-        - name: kustomize
-          image: sysnet4admin/kustomize:3.6.1
+        - name: kubectl
+          image: gcr.io/cloud-builders/kubectl
           tty: true
-          volumeMounts:
-          - mountPath: /usr/bin/kubectl
-            name: kubectl
           command:
           - cat
         - name: docker
@@ -45,9 +40,6 @@ pipeline {
           - cat
         serviceAccount: cd-jenkins
         volumes:
-        - name: kubectl
-          hostPath:
-            path: /usr/bin/kubectl
         - name: docker-sock
           hostPath:
             path: /var/run/docker.sock
@@ -85,7 +77,7 @@ pipeline {
     }
     stage('deploy kubernetes') {
       steps {
-        container('kustomize') {
+        container('kubectl') {
           sh "sed -i.bak 's#set_image#${IMAGE_NAME}#' ./deployment.yaml"
           step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: './deployment.yaml', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
           step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: './service.yaml', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
