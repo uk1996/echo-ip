@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: echo-ip
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: echo-ip
