@@ -64,15 +64,6 @@ pipeline {
       steps {
         container('gcloud') {
           script {
-            env.GCLOUD_AUTH=sh(returnStdout: true, script: 'gcloud auth print-access-token').trim()
-          }
-        }
-      }
-    }
-    stage('set auth') {
-      steps {
-        container('gcloud') {
-          script {
             sh('gcloud container clusters get-credentials autopilot-cluster-2 --region asia-northeast3 --project phonic-realm-360311')
             env.GCLOUD_AUTH=sh(returnStdout: true, script: 'gcloud auth print-access-token').trim()
           }
