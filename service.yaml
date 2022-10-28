@@ -3,6 +3,7 @@ apiVersion: v1
 metadata:
   name: echo-ip
 spec:
+  type: LoadBalancer
   ports:
   - name: http
     port: 8080
